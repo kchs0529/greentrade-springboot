@@ -37,8 +37,8 @@ dependencies {
     // Spring Data JPA (JdbcTemplate 포함)
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-    // Oracle JDBC
-    implementation 'com.oracle.database.jdbc:ojdbc11:23.4.0.24.05'
+    // MySQL JDBC
+    runtimeOnly 'com.mysql:mysql-connector-j'
 
     // WebSocket (채팅)
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
