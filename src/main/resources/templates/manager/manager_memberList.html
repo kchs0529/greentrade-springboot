@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('회원 관리')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div class="container py-4">
+    <h5 class="fw-bold mb-3">회원 관리</h5>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+            <tr>
+                <th>회원번호</th>
+                <th>이름</th>
+                <th>아이디</th>
+                <th>신고 횟수</th>
+                <th>관리</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member : ${members}">
+                <td th:text="${member.userno}"></td>
+                <td th:text="${member.user_name}"></td>
+                <td>
+                    <a th:href="@{/manager/members/{id}(id=${member.user_id})}"
+                       th:text="${member.user_id}" class="text-decoration-none"></a>
+                </td>
+                <td>
+                    <a th:href="@{/manager/reports/user/{no}(no=${member.userno})}"
+                       class="text-decoration-none">
+                        <span class="badge" th:classappend="${member.targetid_count > 0 ? 'bg-danger' : 'bg-secondary'}"
+                              th:text="${member.targetid_count + '건'}">0건</span>
+                    </a>
+                </td>
+                <td>
+                    <form th:action="@{/manager/members/delete}" method="post" class="d-inline"
+                          onsubmit="return confirm('정말 삭제하시겠습니까?')">
+                        <input type="hidden" name="userId" th:value="${member.user_id}">
+                        <input type="hidden" name="userno" th:value="${member.userno}">
+                        <button type="submit" class="btn btn-danger btn-sm">삭제</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- 페이징 -->
+    <nav th:if="${totalPages > 1}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/manager/members(page=${currentPage - 1})}">이전</a>
+            </li>
+            <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}"
+                th:classappend="${i == currentPage ? 'active' : ''}">
+                <a class="page-link" th:href="@{/manager/members(page=${i})}" th:text="${i}">1</a>
+            </li>
+            <li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/manager/members(page=${currentPage + 1})}">다음</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

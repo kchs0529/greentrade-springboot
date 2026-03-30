@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('결제')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h5 class="fw-bold mb-4">결제하기</h5>
+
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body">
+                    <h6 class="fw-bold">상품 정보</h6>
+                    <table class="table table-sm">
+                        <tr><th class="text-muted">상품명</th><td th:text="${product.title}"></td></tr>
+                        <tr><th class="text-muted">가격</th><td class="text-success fw-bold" th:text="${product.price + '원'}"></td></tr>
+                        <tr><th class="text-muted">결제방법</th><td th:text="${product.paymethod}"></td></tr>
+                        <tr><th class="text-muted">거래방법</th><td th:text="${product.trademethod}"></td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h6 class="fw-bold">배송지 정보</h6>
+                    <table class="table table-sm">
+                        <tr><th class="text-muted">받는 분</th><td th:text="${buyer.user_name}"></td></tr>
+                        <tr><th class="text-muted">전화번호</th><td th:text="${buyer.user_call}"></td></tr>
+                        <tr><th class="text-muted">주소</th><td th:text="${buyer.address1 + ' ' + (buyer.address2 ?: '')}"></td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <form th:action="@{/pay/success}" method="post">
+                <input type="hidden" name="productno" th:value="${product.productno}">
+                <button type="submit" class="btn btn-warning w-100 fw-bold py-2">
+                    <i class="bi bi-credit-card"></i> 결제하기
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

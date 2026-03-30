@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('마이페이지')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="container py-4">
+    <div class="row g-4">
+        <!-- 사이드바 -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center p-3">
+                    <img th:if="${mypage.imgurl != null}"
+                         th:src="@{/uploads/{img}(img=${mypage.imgurl})}"
+                         class="rounded-circle mb-2" width="80" height="80" style="object-fit:cover;" alt="프로필">
+                    <img th:unless="${mypage.imgurl != null}"
+                         th:src="@{/img/defaultprofile.png}"
+                         class="rounded-circle mb-2" width="80" height="80" alt="프로필">
+                    <h6 class="fw-bold mb-0" th:text="${mypage.user_name}">이름</h6>
+                    <small class="text-muted" th:text="${mypage.email}">이메일</small>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><a th:href="@{/mypage}" class="text-decoration-none text-dark">마이페이지 홈</a></li>
+                    <li class="list-group-item"><a th:href="@{/mypage/edit}" class="text-decoration-none text-dark">정보 수정</a></li>
+                    <li class="list-group-item"><a th:href="@{/mypage/selllog}" class="text-decoration-none text-dark">판매 내역</a></li>
+                    <li class="list-group-item"><a th:href="@{/mypage/buylog}" class="text-decoration-none text-dark">구매 내역</a></li>
+                    <li class="list-group-item"><a th:href="@{/mypage/buylist}" class="text-decoration-none text-dark">구매 목록</a></li>
+                    <li class="list-group-item"><a th:href="@{/mypage/selllist}" class="text-decoration-none text-dark">판매 목록</a></li>
+                    <li class="list-group-item"><a th:href="@{/mypage/like}" class="text-decoration-none text-dark">찜 목록</a></li>
+                    <li class="list-group-item"><a th:href="@{/mypage/review}" class="text-decoration-none text-dark">리뷰 내역</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 메인 콘텐츠 -->
+        <div class="col-md-9">
+            <h5 class="fw-bold mb-3">마이페이지</h5>
+            <div class="row g-3 mb-4">
+                <div class="col-4">
+                    <div class="card text-center border-0 shadow-sm">
+                        <div class="card-body">
+                            <h3 class="text-success fw-bold" th:text="${mypage.buylistcount}">0</h3>
+                            <p class="text-muted mb-0">구매 수</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card text-center border-0 shadow-sm">
+                        <div class="card-body">
+                            <h3 class="text-primary fw-bold" th:text="${mypage.selllistcount}">0</h3>
+                            <p class="text-muted mb-0">판매 수</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card text-center border-0 shadow-sm">
+                        <div class="card-body">
+                            <h3 class="text-warning fw-bold" th:text="${mypage.reviewcount}">0</h3>
+                            <p class="text-muted mb-0">리뷰 수</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-3">기본 정보</h6>
+                    <table class="table table-sm">
+                        <tr><th class="text-muted" style="width:120px;">이름</th><td th:text="${mypage.user_name}"></td></tr>
+                        <tr><th class="text-muted">이메일</th><td th:text="${mypage.email}"></td></tr>
+                        <tr><th class="text-muted">전화번호</th><td th:text="${mypage.user_call}"></td></tr>
+                        <tr><th class="text-muted">주소</th><td th:text="${mypage.address1 + ' ' + (mypage.address2 ?: '')}"></td></tr>
+                    </table>
+                    <a th:href="@{/mypage/edit}" class="btn btn-outline-success btn-sm">정보 수정</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

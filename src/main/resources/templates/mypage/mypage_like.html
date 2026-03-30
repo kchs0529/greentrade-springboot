@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('찜 목록')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div class="container py-4">
+    <h5 class="fw-bold mb-3">찜 목록 <i class="bi bi-heart-fill text-danger"></i></h5>
+    <div th:if="${likeList == null or likeList.isEmpty()}" class="text-center py-5 text-muted">
+        <i class="bi bi-heart display-4"></i>
+        <p class="mt-3">찜한 상품이 없습니다.</p>
+    </div>
+    <div class="row row-cols-2 row-cols-md-4 g-3">
+        <div class="col" th:each="item : ${likeList}">
+            <a th:href="@{/product/detail/{no}(no=${item.productno})}" class="text-decoration-none text-dark">
+                <div class="card h-100 border-0 shadow-sm">
+                    <img th:if="${item.image != null}"
+                         th:src="@{/uploads/{img}(img=${item.image})}"
+                         class="card-img-top" style="height:160px; object-fit:cover;" alt="">
+                    <div class="card-body p-2">
+                        <p class="fw-semibold mb-1 text-truncate" th:text="${item.title}">상품명</p>
+                        <p class="text-success fw-bold mb-0" th:text="${item.price + '원'}">가격</p>
+                        <span class="badge" th:classappend="${item.productstatus == '판매중' ? 'bg-success' : 'bg-secondary'}"
+                              th:text="${item.productstatus}">상태</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

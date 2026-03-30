@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/header :: head('FAQ')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="fw-bold">FAQ</h5>
+        <a th:href="@{/faq/write}" class="btn btn-success btn-sm" sec:authorize="hasRole('MANAGER')">
+            <i class="bi bi-pencil"></i> FAQ 작성
+        </a>
+    </div>
+
+    <div class="accordion" id="faqAccordion">
+        <div class="accordion-item" th:each="faq, stat : ${faqList}">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button"
+                        th:attr="data-bs-target='#faq' + ${faq.faqno}"
+                        data-bs-toggle="collapse">
+                    <span class="badge bg-secondary me-2" th:text="${faq.faqcate}">카테고리</span>
+                    <span th:text="${faq.faqtitle}">제목</span>
+                </button>
+            </h2>
+            <div th:id="'faq' + ${faq.faqno}" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body" th:text="${faq.faqcontent}">내용</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 페이징 -->
+    <nav class="mt-4" th:if="${totalPages > 1}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/faq(page=${currentPage - 1})}">이전</a>
+            </li>
+            <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}"
+                th:classappend="${i == currentPage ? 'active' : ''}">
+                <a class="page-link" th:href="@{/faq(page=${i})}" th:text="${i}">1</a>
+            </li>
+            <li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/faq(page=${currentPage + 1})}">다음</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

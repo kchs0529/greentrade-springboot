@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('구매 내역')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div class="container py-4">
+    <h5 class="fw-bold mb-3">구매 내역</h5>
+    <div th:if="${buyLogs == null or buyLogs.isEmpty()}" class="text-center py-5 text-muted">
+        <i class="bi bi-cart display-4"></i>
+        <p class="mt-3">구매 내역이 없습니다.</p>
+    </div>
+    <div class="list-group">
+        <div class="list-group-item" th:each="log : ${buyLogs}">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h6 class="mb-1 fw-bold" th:text="${log.title}">상품명</h6>
+                    <small class="text-muted">
+                        <span th:text="${log.price + '원'}">0원</span> |
+                        <span th:text="${log.tradesuccessdate}">날짜</span>
+                    </small>
+                </div>
+                <span class="badge bg-success align-self-center" th:text="${log.tradestatus}">완료</span>
+            </div>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

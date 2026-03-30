@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('아이디 찾기')}"></head>
+<body class="bg-light">
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-sm" style="width: 420px;">
+        <div class="card-body p-4">
+            <h4 class="fw-bold mb-4">아이디 찾기</h4>
+            <div th:if="${foundId}" class="alert alert-success">
+                회원님의 아이디: <strong th:text="${foundId}"></strong>
+            </div>
+            <div th:if="${errorMsg}" class="alert alert-danger" th:text="${errorMsg}"></div>
+            <form th:action="@{/find-id}" method="post">
+                <div class="mb-3">
+                    <label class="form-label">이메일</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">전화번호</label>
+                    <input type="text" name="user_call" class="form-control" placeholder="010-0000-0000" required>
+                </div>
+                <button type="submit" class="btn btn-success w-100">아이디 찾기</button>
+            </form>
+            <div class="text-center mt-3">
+                <a th:href="@{/login}" class="text-muted text-decoration-none small">로그인으로 돌아가기</a>
+            </div>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

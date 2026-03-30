@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('신고 관리')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div class="container py-4">
+    <h5 class="fw-bold mb-3">신고 목록</h5>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+            <tr>
+                <th>번호</th><th>제목</th><th>신고자</th><th>피신고자</th><th>날짜</th><th>상세</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="report : ${reports}">
+                <td th:text="${report.reportid}"></td>
+                <td th:text="${report.reporttitle}"></td>
+                <td th:text="${report.reporterNickname}"></td>
+                <td th:text="${report.targetNickname}"></td>
+                <td th:text="${report.reportdate}"></td>
+                <td>
+                    <a th:href="@{/manager/reports/{id}(id=${report.reportid})}" class="btn btn-outline-primary btn-sm">상세</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <nav th:if="${totalPages > 1}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/manager/reports(page=${currentPage - 1})}">이전</a>
+            </li>
+            <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}"
+                th:classappend="${i == currentPage ? 'active' : ''}">
+                <a class="page-link" th:href="@{/manager/reports(page=${i})}" th:text="${i}">1</a>
+            </li>
+            <li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/manager/reports(page=${currentPage + 1})}">다음</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

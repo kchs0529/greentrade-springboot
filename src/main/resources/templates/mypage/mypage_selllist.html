@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('판매 목록')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div class="container py-4">
+    <h5 class="fw-bold mb-3">판매 목록</h5>
+    <div th:if="${sellList == null or sellList.isEmpty()}" class="text-center py-5 text-muted">
+        <p>판매 목록이 없습니다.</p>
+    </div>
+    <div class="list-group">
+        <div class="list-group-item d-flex gap-3" th:each="item : ${sellList}">
+            <img th:if="${item.image != null}"
+                 th:src="@{/uploads/{img}(img=${item.image})}"
+                 width="80" height="80" style="object-fit:cover;" class="rounded" alt="">
+            <div class="flex-grow-1">
+                <a th:href="@{/product/detail/{no}(no=${item.productno})}"
+                   class="fw-bold text-decoration-none text-dark" th:text="${item.title}">상품명</a>
+                <p class="text-muted small mb-0" th:text="${item.price + '원 | ' + item.paymethod}"></p>
+                <small class="text-muted" th:text="${'구매자: ' + item.user_name}"></small>
+            </div>
+            <small class="text-muted align-self-center" th:text="${item.selllistdate}">날짜</small>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

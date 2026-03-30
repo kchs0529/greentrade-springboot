@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('로그인')}"></head>
+<body class="bg-light">
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-sm" style="width: 400px;">
+        <div class="card-body p-4">
+            <h3 class="text-center fw-bold text-success mb-4">
+                <i class="bi bi-recycle"></i> GreenTrade
+            </h3>
+            <div th:if="${errorMsg}" class="alert alert-danger" th:text="${errorMsg}"></div>
+            <form th:action="@{/login}" method="post">
+                <div class="mb-3">
+                    <label class="form-label">아이디</label>
+                    <input type="text" name="user_id" class="form-control" placeholder="아이디 입력" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">비밀번호</label>
+                    <input type="password" name="user_pw" class="form-control" placeholder="비밀번호 입력" required>
+                </div>
+                <button type="submit" class="btn btn-success w-100 mb-2">로그인</button>
+            </form>
+            <div class="d-flex justify-content-between mt-2">
+                <a th:href="@{/find-id}" class="text-muted text-decoration-none small">아이디 찾기</a>
+                <a th:href="@{/find-password}" class="text-muted text-decoration-none small">비밀번호 찾기</a>
+                <a th:href="@{/join}" class="text-success text-decoration-none small fw-bold">회원가입</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

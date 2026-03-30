@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('리뷰 내역')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div class="container py-4">
+    <h5 class="fw-bold mb-3">리뷰 내역</h5>
+    <div th:if="${reviews == null or reviews.isEmpty()}" class="text-center py-5 text-muted">
+        <p>리뷰 내역이 없습니다.</p>
+    </div>
+    <div class="list-group">
+        <div class="list-group-item" th:each="review : ${reviews}">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <span class="text-warning" th:each="i : ${#numbers.sequence(1, review.reviewscore)}">★</span>
+                    <span class="text-muted" th:each="i : ${#numbers.sequence(review.reviewscore + 1, 5)}">★</span>
+                    <span class="ms-2" th:text="${review.reviewcontent}">리뷰 내용</span>
+                </div>
+                <small class="text-muted" th:text="${review.reviewdate}">날짜</small>
+            </div>
+            <small class="text-muted">판매자: <span th:text="${review.sellername}"></span></small>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

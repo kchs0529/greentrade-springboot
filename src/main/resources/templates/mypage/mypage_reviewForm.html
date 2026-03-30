@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('리뷰 작성')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h5 class="fw-bold mb-4">리뷰 작성</h5>
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body">
+                    <p class="fw-semibold mb-1" th:text="${product.title}">상품명</p>
+                    <small class="text-muted">판매자: <span th:text="${seller.nickname}">판매자</span></small>
+                </div>
+            </div>
+            <form th:action="@{/mypage/review/submit}" method="post">
+                <input type="hidden" name="productno" th:value="${product.productno}">
+                <input type="hidden" name="sellerUserno" th:value="${seller.userno}">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">별점</label>
+                    <select name="reviewscore" class="form-select">
+                        <option value="5">★★★★★ (5점)</option>
+                        <option value="4">★★★★☆ (4점)</option>
+                        <option value="3">★★★☆☆ (3점)</option>
+                        <option value="2">★★☆☆☆ (2점)</option>
+                        <option value="1">★☆☆☆☆ (1점)</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">리뷰 내용</label>
+                    <textarea name="reviewcontent" class="form-control" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-success w-100">리뷰 등록</button>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

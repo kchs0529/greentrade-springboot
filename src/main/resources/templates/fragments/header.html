@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' - GreenTrade'">GreenTrade</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold text-success fs-4" th:href="@{/}">
+            <i class="bi bi-recycle"></i> GreenTrade
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- 검색 -->
+            <form class="d-flex mx-auto" th:action="@{/search}" method="get">
+                <div class="input-group" style="width: 350px;">
+                    <input class="form-control" type="search" name="keyword" placeholder="상품 검색...">
+                    <button class="btn btn-success" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
+
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/product/list}">전체상품</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/product/best}">인기상품</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/product/share}">나눔</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/faq}">FAQ</a>
+                </li>
+
+                <!-- 비로그인 -->
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a class="nav-link" th:href="@{/login}">로그인</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a class="nav-link" th:href="@{/join}">회원가입</a>
+                </li>
+
+                <!-- 로그인 -->
+                <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle"></i>
+                        <span sec:authentication="name"></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" th:href="@{/mypage}">마이페이지</a></li>
+                        <li><a class="dropdown-item" th:href="@{/product/add}">상품 등록</a></li>
+                        <li sec:authorize="hasRole('MANAGER')">
+                            <a class="dropdown-item" th:href="@{/manager}">관리자</a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form th:action="@{/logout}" method="post">
+                                <button class="dropdown-item" type="submit">로그아웃</button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+</body>
+</html>

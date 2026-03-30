@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('판매자 정보')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div class="container py-4">
+    <div class="row g-4">
+        <!-- 판매자 프로필 -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <img th:if="${seller != null and seller.imgurl != null}"
+                     th:src="@{/uploads/{img}(img=${seller.imgurl})}"
+                     class="rounded-circle mx-auto mb-2" width="80" height="80" style="object-fit:cover;" alt="">
+                <h6 class="fw-bold" th:text="${seller != null ? seller.nickname : '판매자'}">닉네임</h6>
+                <div class="text-muted small">
+                    <i class="bi bi-star-fill text-warning"></i>
+                    그린스코어 <strong th:text="${seller != null ? seller.greenscore : 0}">0</strong>
+                </div>
+                <div class="text-muted small mt-1">
+                    리뷰 <span th:text="${seller != null ? seller.reviewCount : 0}">0</span>건
+                </div>
+            </div>
+        </div>
+
+        <!-- 판매 상품 -->
+        <div class="col-md-9">
+            <h6 class="fw-bold mb-3">판매 중인 상품</h6>
+            <div class="row row-cols-2 row-cols-md-3 g-3 mb-4">
+                <div class="col" th:each="item : ${sellerItems}">
+                    <a th:href="@{/product/detail/{no}(no=${item.productno})}" class="text-decoration-none text-dark">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <img th:if="${item.image != null}"
+                                 th:src="@{/uploads/{img}(img=${item.image})}"
+                                 class="card-img-top" style="height:140px; object-fit:cover;" alt="">
+                            <div class="card-body p-2">
+                                <p class="fw-semibold mb-1 text-truncate" th:text="${item.title}">상품명</p>
+                                <p class="text-success fw-bold mb-0"
+                                   th:text="${item.paymethod == '나눔' ? '나눔' : item.price + '원'}">가격</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 후기 -->
+            <h6 class="fw-bold mb-3" th:if="${reviews != null and !reviews.isEmpty()}">거래 후기</h6>
+            <div class="list-group" th:if="${reviews != null and !reviews.isEmpty()}">
+                <div class="list-group-item" th:each="review : ${reviews}">
+                    <span th:text="${review.reviewcontent}">후기</span>
+                    <span class="badge bg-secondary ms-2" th:text="${review.content_count + '건'}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

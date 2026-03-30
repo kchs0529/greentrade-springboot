@@ -1,0 +1,48 @@
+/* GreenTrade Global Styles */
+:root {
+    --green-primary: #2d8653;
+    --green-light: #52c47a;
+}
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.product-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12) !important;
+}
+
+.navbar-brand {
+    font-size: 1.4rem;
+}
+
+/* Pagination */
+.page-item.active .page-link {
+    background-color: var(--green-primary);
+    border-color: var(--green-primary);
+}
+
+.page-link {
+    color: var(--green-primary);
+}
+
+/* Chat */
+#chatBox::-webkit-scrollbar {
+    width: 6px;
+}
+#chatBox::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+/* Badge */
+.badge {
+    font-weight: 500;
+}

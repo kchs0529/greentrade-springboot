@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('상품 등록')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <h4 class="fw-bold mb-4">상품 등록</h4>
+            <form th:action="@{/product/add}" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">상품명 *</label>
+                    <input type="text" name="title" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">가격</label>
+                    <input type="text" name="price" class="form-control" placeholder="나눔이면 비워두세요">
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <label class="form-label fw-semibold">결제 방법</label>
+                        <select name="paymethod" class="form-select">
+                            <option value="직거래">직거래</option>
+                            <option value="택배">택배</option>
+                            <option value="나눔">나눔</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="form-label fw-semibold">거래 방법</label>
+                        <select name="trademethod" class="form-select">
+                            <option value="직거래">직거래</option>
+                            <option value="택배거래">택배거래</option>
+                            <option value="모두가능">모두가능</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">상품 상태</label>
+                    <select name="productStatus" class="form-select">
+                        <option value="최상">최상</option>
+                        <option value="상">상</option>
+                        <option value="중">중</option>
+                        <option value="하">하</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">거래 장소</label>
+                    <input type="text" name="tradelocation" class="form-control" placeholder="예) 강남역 3번출구">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">상품 설명</label>
+                    <textarea name="productDetail" class="form-control" rows="5"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">상품 이미지</label>
+                    <input type="file" name="imageFile" class="form-control" accept="image/*">
+                </div>
+                <button type="submit" class="btn btn-success w-100">상품 등록</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>
