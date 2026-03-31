@@ -31,15 +31,35 @@
                 </div>
             </div>
 
-            <form th:action="@{/pay/success}" method="post">
-                <input type="hidden" name="productno" th:value="${product.productno}">
-                <button type="submit" class="btn btn-warning w-100 fw-bold py-2">
-                    <i class="bi bi-credit-card"></i> 결제하기
-                </button>
-            </form>
+            <button id="payment-btn" class="btn btn-warning w-100 fw-bold py-2">
+                <i class="bi bi-credit-card"></i> 결제하기
+            </button>
         </div>
     </div>
 </div>
 <footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<script src="https://js.tosspayments.com/v1/payment"></script>
+<script th:inline="javascript">
+    const clientKey = "test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq";
+    const amount    = /*[[${product.price}]]*/ 0;
+    const orderName = /*[[${product.title}]]*/ "";
+    const customerName = /*[[${buyer.user_name}]]*/ "";
+    const productno = /*[[${product.productno}]]*/ 0;
+
+    const tossPayments = TossPayments(clientKey);
+
+    document.getElementById("payment-btn").addEventListener("click", function () {
+        const orderId = "order-" + Date.now() + "-" + Math.floor(Math.random() * 100000);
+        tossPayments.requestPayment("카드", {
+            amount: amount,
+            orderId: orderId,
+            orderName: orderName,
+            customerName: customerName,
+            successUrl: window.location.origin + "/pay/success?productno=" + productno,
+            failUrl:    window.location.origin + "/pay/fail"
+        });
+    });
+</script>
 </body>
 </html>

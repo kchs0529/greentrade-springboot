@@ -33,11 +33,23 @@ public class PayController {
         return "pay/pay";
     }
 
-    @PostMapping("/success")
-    public String paySuccess(@RequestParam int productno,
+    @GetMapping("/success")
+    public String paySuccess(@RequestParam String paymentKey,
+                             @RequestParam String orderId,
+                             @RequestParam int amount,
+                             @RequestParam int productno,
                              @AuthenticationPrincipal CustomUserDetails userDetails) {
         ProductDTO product = productService.getProductInfo(productno);
-        payService.paySuccess(product, userDetails.getUserno());
+        payService.confirmAndComplete(paymentKey, orderId, amount, product, userDetails.getUserno());
         return "redirect:/mypage/buylist";
+    }
+
+    @GetMapping("/fail")
+    public String payFail(@RequestParam(required = false) String message,
+                          @RequestParam(required = false) String code,
+                          Model model) {
+        model.addAttribute("message", message);
+        model.addAttribute("code", code);
+        return "pay/fail";
     }
 }

@@ -23,7 +23,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
             FROM product p JOIN user_table_real u ON p.userno = u.userno
             WHERE p.sellstatus = '판매중'
             ORDER BY p.adddate DESC
-            FETCH FIRST 8 ROWS ONLY
+            LIMIT 8
             """, nativeQuery = true)
     List<ProductWithUserProjection> findRecentItems();
 
@@ -48,7 +48,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
             FROM product p JOIN user_table_real u ON p.userno = u.userno
             WHERE p.sellstatus = '판매중' AND p.paymethod = '나눔'
             ORDER BY p.adddate DESC
-            FETCH FIRST 16 ROWS ONLY
+            LIMIT 16
             """, nativeQuery = true)
     List<ProductWithUserProjection> findShareList();
 
@@ -60,7 +60,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
             FROM product p JOIN user_table_real u ON p.userno = u.userno
             WHERE p.sellstatus = '판매중'
             ORDER BY p.viewcount DESC
-            FETCH FIRST 16 ROWS ONLY
+            LIMIT 16
             """, nativeQuery = true)
     List<ProductWithUserProjection> findBestList();
 

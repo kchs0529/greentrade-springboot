@@ -9,11 +9,17 @@ import com.mega.greentrade.repository.ProductRepository;
 import com.mega.greentrade.entity.SellList;
 import com.mega.greentrade.repository.SellListRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClient;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Base64;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +29,27 @@ public class PayService {
     private final LogRepository logRepository;
     private final BuyListRepository buyListRepository;
     private final SellListRepository sellListRepository;
+    private final RestClient restClient = RestClient.create();
+
+    @Value("${toss.secret-key}")
+    private String tossSecretKey;
+
+    @Transactional
+    public void confirmAndComplete(String paymentKey, String orderId, int amount,
+                                   ProductDTO product, int buyUserno) {
+        String encoded = Base64.getEncoder()
+                .encodeToString((tossSecretKey + ":").getBytes(StandardCharsets.UTF_8));
+
+        restClient.post()
+                .uri("https://api.tosspayments.com/v1/payments/confirm")
+                .header("Authorization", "Basic " + encoded)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Map.of("paymentKey", paymentKey, "orderId", orderId, "amount", amount))
+                .retrieve()
+                .toBodilessEntity();
+
+        paySuccess(product, buyUserno);
+    }
 
     @Transactional
     public void paySuccess(ProductDTO productDto, int buyUserno) {
