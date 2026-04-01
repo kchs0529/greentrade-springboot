@@ -7,6 +7,8 @@ import com.mega.greentrade.service.ProductService;
 import com.mega.greentrade.repository.HeartRepository;
 import com.mega.greentrade.repository.ReviewRepository;
 import com.mega.greentrade.security.CustomUserDetails;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+@Tag(name = "Product", description = "상품 관련 API")
 @Controller
 @RequiredArgsConstructor
 public class ProductController {
@@ -29,11 +32,13 @@ public class ProductController {
     @Value("${file.upload.dir}")
     private String uploadDir;
 
+    @Operation(summary = "상품 등록 페이지")
     @GetMapping("/product/add")
     public String addForm() {
         return "product/add_form";
     }
 
+    @Operation(summary = "상품 등록 처리")
     @PostMapping("/product/add")
     public String addItem(@ModelAttribute ProductDTO dto,
                           @RequestParam(required = false) MultipartFile imageFile,
@@ -43,6 +48,7 @@ public class ProductController {
         return "redirect:/";
     }
 
+    @Operation(summary = "상품 상세 페이지")
     @GetMapping("/product/detail/{productno}")
     public String detailItem(@PathVariable int productno,
                              @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -56,6 +62,7 @@ public class ProductController {
             int heartStat = heartRepository.findByUsernoAndProductno(userDetails.getUserno(), productno)
                     .map(h -> h.getLikestat()).orElse(0);
             model.addAttribute("heartStatus", heartStat);
+            model.addAttribute("currentUserno", userDetails.getUserno());
         }
 
         int sellerUserno = seller != null ? seller.getUserno() : 0;
@@ -63,6 +70,7 @@ public class ProductController {
         return "product/detail";
     }
 
+    @Operation(summary = "상품 목록 조회 (페이징)")
     @GetMapping("/product/list")
     public String productList(@RequestParam(defaultValue = "1") int page, Model model) {
         int pageSize = 12;
@@ -73,18 +81,21 @@ public class ProductController {
         return "product/list";
     }
 
+    @Operation(summary = "나눔 상품 목록")
     @GetMapping("/product/share")
     public String shareList(Model model) {
         model.addAttribute("products", productService.getShareList());
         return "product/share";
     }
 
+    @Operation(summary = "베스트 상품 목록")
     @GetMapping("/product/best")
     public String bestList(Model model) {
         model.addAttribute("products", productService.getBestList());
         return "product/best";
     }
 
+    @Operation(summary = "상품 검색")
     @GetMapping("/search")
     public String search(@RequestParam(required = false) String keyword,
                          @RequestParam(defaultValue = "1") int page,

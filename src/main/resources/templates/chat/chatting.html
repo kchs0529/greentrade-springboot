@@ -7,21 +7,60 @@
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-7">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-success text-white fw-bold">
-                    <i class="bi bi-chat-dots"></i> 채팅방 #<span th:text="${chatroomId}"></span>
-                </div>
-                <div class="card-body p-0">
-                    <div id="chatBox" style="height: 400px; overflow-y: auto; padding: 16px; background: #f8f9fa;">
-                        <!-- 메시지 표시 영역 -->
+            <div class="card border-0 shadow-sm d-flex flex-column" style="height:82vh;">
+
+                <!-- 채팅방 헤더 -->
+                <div class="card-header bg-white border-bottom d-flex align-items-center gap-3 py-3">
+                    <a th:href="@{/chat/list}" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i>
+                    </a>
+                    <div>
+                        <div class="fw-bold" th:text="${otherNickname}"></div>
+                        <div class="text-muted small text-truncate" th:text="${productTitle}" style="max-width:220px;"></div>
                     </div>
+                    <a th:href="@{/product/detail/{no}(no=${productno})}" class="ms-auto btn btn-sm btn-outline-success">
+                        상품 보기
+                    </a>
                 </div>
-                <div class="card-footer">
+
+                <!-- 메시지 영역 -->
+                <div id="chatBox" class="flex-grow-1 overflow-auto p-3" style="background:#f5f5f5;">
+
+                    <!-- 서버에서 불러온 이전 메시지 기록 -->
+                    <div th:each="msg : ${messages ?: {}}"
+                         th:class="'d-flex mb-3 ' + (${msg.senderUserno} == ${userno} ? 'justify-content-end' : 'justify-content-start')">
+
+                        <!-- 상대방 아바타 -->
+                        <div th:if="${msg.senderUserno} != ${userno}" class="me-2 flex-shrink-0">
+                            <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                                 style="width:34px;height:34px;font-size:0.8rem;"
+                                 th:text="${#strings.substring(msg.senderNickname, 0, 1)}">?</div>
+                        </div>
+
+                        <div>
+                            <div th:if="${msg.senderUserno} != ${userno}"
+                                 class="text-muted small mb-1"
+                                 th:text="${msg.senderNickname}"></div>
+                            <div th:class="'d-flex align-items-end gap-1 ' + (${msg.senderUserno} == ${userno} ? 'flex-row-reverse' : '')">
+                                <div th:class="'px-3 py-2 rounded-3 ' + (${msg.senderUserno} == ${userno} ? 'bg-success text-white' : 'bg-white border')"
+                                     style="max-width:70%;word-break:break-word;"
+                                     th:text="${msg.message}"></div>
+                                <span class="text-muted flex-shrink-0" style="font-size:0.7rem;"
+                                      th:text="${msg.sentAt}"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 입력 영역 -->
+                <div class="card-footer bg-white border-top p-2">
                     <div class="input-group">
-                        <input type="text" id="msgInput" class="form-control" placeholder="메시지를 입력하세요..."
+                        <input type="text" id="msgInput" class="form-control border-0 shadow-none"
+                               placeholder="메시지를 입력하세요..."
                                onkeydown="if(event.key==='Enter') sendMsg()">
-                        <button class="btn btn-success" onclick="sendMsg()">
-                            <i class="bi bi-send"></i>
+                        <button class="btn btn-success px-3" onclick="sendMsg()">
+                            <i class="bi bi-send-fill"></i>
                         </button>
                     </div>
                 </div>
@@ -33,25 +72,67 @@
 <script th:inline="javascript">
 const chatroomId = [[${chatroomId}]];
 const myUserno = [[${userno}]];
-const wsUrl = 'ws://' + location.host + '/ws/chat/' + chatroomId;
+const wsUrl = (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws/chat/' + chatroomId;
 const ws = new WebSocket(wsUrl);
 const chatBox = document.getElementById('chatBox');
 
+// 최초 로드 시 스크롤 맨 아래
+chatBox.scrollTop = chatBox.scrollHeight;
+
 ws.onmessage = function(e) {
     const data = JSON.parse(e.data);
-    const div = document.createElement('div');
-    const isMine = data.userno == myUserno;
-    div.className = 'd-flex mb-2 ' + (isMine ? 'justify-content-end' : 'justify-content-start');
-    div.innerHTML = `<div class="px-3 py-2 rounded-3 ${isMine ? 'bg-success text-white' : 'bg-white border'}"
-                         style="max-width:70%;">${data.message}</div>`;
-    chatBox.appendChild(div);
-    chatBox.scrollTop = chatBox.scrollHeight;
+    appendMessage(data.userno == myUserno, data.nickname, data.message, data.sentAt);
 };
+
+function appendMessage(isMine, nickname, message, time) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'd-flex mb-3 ' + (isMine ? 'justify-content-end' : 'justify-content-start');
+
+    if (!isMine) {
+        const avatarWrap = document.createElement('div');
+        avatarWrap.className = 'me-2 flex-shrink-0';
+        const avatar = document.createElement('div');
+        avatar.className = 'bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold';
+        avatar.style.cssText = 'width:34px;height:34px;font-size:0.8rem;';
+        avatar.textContent = nickname ? nickname.charAt(0) : '?';
+        avatarWrap.appendChild(avatar);
+        wrapper.appendChild(avatarWrap);
+    }
+
+    const inner = document.createElement('div');
+
+    if (!isMine) {
+        const nameEl = document.createElement('div');
+        nameEl.className = 'text-muted small mb-1';
+        nameEl.textContent = nickname;
+        inner.appendChild(nameEl);
+    }
+
+    const row = document.createElement('div');
+    row.className = 'd-flex align-items-end gap-1 ' + (isMine ? 'flex-row-reverse' : '');
+
+    const bubble = document.createElement('div');
+    bubble.className = 'px-3 py-2 rounded-3 ' + (isMine ? 'bg-success text-white' : 'bg-white border');
+    bubble.style.cssText = 'max-width:70%;word-break:break-word;';
+    bubble.textContent = message;
+
+    const timeEl = document.createElement('span');
+    timeEl.className = 'text-muted flex-shrink-0';
+    timeEl.style.fontSize = '0.7rem';
+    timeEl.textContent = time;
+
+    row.appendChild(bubble);
+    row.appendChild(timeEl);
+    inner.appendChild(row);
+    wrapper.appendChild(inner);
+    chatBox.appendChild(wrapper);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
 
 function sendMsg() {
     const input = document.getElementById('msgInput');
     const msg = input.value.trim();
-    if (!msg) return;
+    if (!msg || ws.readyState !== WebSocket.OPEN) return;
     ws.send(JSON.stringify({ userno: myUserno, message: msg }));
     input.value = '';
 }

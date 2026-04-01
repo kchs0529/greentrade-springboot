@@ -20,6 +20,8 @@ import com.mega.greentrade.security.CustomUserDetails;
 import com.mega.greentrade.entity.User;
 import com.mega.greentrade.dto.UserDTO;
 import com.mega.greentrade.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -34,6 +36,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+@Tag(name = "MyPage", description = "마이페이지 관련 API")
 @Controller
 @RequestMapping("/mypage")
 @RequiredArgsConstructor
@@ -51,6 +54,7 @@ public class MyPageController {
     @Value("${file.upload.dir}")
     private String uploadDir;
 
+    @Operation(summary = "마이페이지 메인")
     @GetMapping
     public String myPageMain(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         int userno = userDetails.getUserno();
@@ -73,6 +77,7 @@ public class MyPageController {
         return "mypage/mypage_main";
     }
 
+    @Operation(summary = "프로필 수정 페이지")
     @GetMapping("/edit")
     public String editPage(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         userRepository.findById(userDetails.getUserno())
@@ -81,6 +86,7 @@ public class MyPageController {
         return "mypage/mypage_edit";
     }
 
+    @Operation(summary = "프로필 수정 처리")
     @PostMapping("/edit")
     public String editMyPage(@AuthenticationPrincipal CustomUserDetails userDetails,
                              @RequestParam String email,
@@ -106,6 +112,7 @@ public class MyPageController {
         return "redirect:/mypage";
     }
 
+    @Operation(summary = "판매 로그 조회")
     @GetMapping("/selllog")
     public String sellLog(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         List<SellLogProjection> sellLogs = logRepository.findSellLogList(userDetails.getUserno());
@@ -113,6 +120,7 @@ public class MyPageController {
         return "mypage/mypage_selllog";
     }
 
+    @Operation(summary = "구매 로그 조회")
     @GetMapping("/buylog")
     public String buyLog(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         List<BuyLogProjection> buyLogs = logRepository.findBuyLogList(userDetails.getUserno());
@@ -120,6 +128,7 @@ public class MyPageController {
         return "mypage/mypage_buylog";
     }
 
+    @Operation(summary = "판매 상품 삭제")
     @PostMapping("/selllog/delete")
     @ResponseBody
     @Transactional
@@ -129,6 +138,7 @@ public class MyPageController {
         return "ok";
     }
 
+    @Operation(summary = "구매 목록 조회")
     @GetMapping("/buylist")
     public String buyList(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         List<BuyListProjection> buyList = buyListRepository.findBuyList(userDetails.getUserno());
@@ -136,6 +146,7 @@ public class MyPageController {
         return "mypage/mypage_buylist";
     }
 
+    @Operation(summary = "판매 목록 조회")
     @GetMapping("/selllist")
     public String sellList(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         List<SellListProjection> sellList = sellListRepository.findSellList(userDetails.getUserno());
@@ -143,6 +154,7 @@ public class MyPageController {
         return "mypage/mypage_selllist";
     }
 
+    @Operation(summary = "좋아요 목록 조회")
     @GetMapping("/like")
     public String likeList(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         List<LikeListProjection> likeList = heartRepository.findLikeList(userDetails.getUserno());
@@ -150,6 +162,7 @@ public class MyPageController {
         return "mypage/mypage_like";
     }
 
+    @Operation(summary = "리뷰 목록 조회")
     @GetMapping("/review")
     public String reviewList(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         List<Review> reviews = reviewRepository.findByReviewusernoOrderByReviewdateDesc(userDetails.getUserno());
@@ -157,6 +170,7 @@ public class MyPageController {
         return "mypage/mypage_reviewList";
     }
 
+    @Operation(summary = "리뷰 작성 페이지")
     @GetMapping("/review/form")
     public String reviewForm(@RequestParam int productno,
                              @RequestParam int sellerUserno,
@@ -168,6 +182,7 @@ public class MyPageController {
         return "mypage/mypage_reviewForm";
     }
 
+    @Operation(summary = "리뷰 제출")
     @PostMapping("/review/submit")
     public String submitReview(@AuthenticationPrincipal CustomUserDetails userDetails,
                                @RequestParam int productno,

@@ -32,7 +32,9 @@ public class SecurityConfig {
                     "/product/best", "/product/share",
                     "/search", "/seller/**",
                     "/css/**", "/js/**", "/img/**", "/uploads/**",
-                    "/faq/**"
+                    "/faq/**",
+                    "/error",
+                    "/swagger-ui/**", "/v3/api-docs/**"
                 ).permitAll()
                 .requestMatchers("/manager/**").hasRole("MANAGER")
                 .anyRequest().authenticated()
@@ -54,7 +56,7 @@ public class SecurityConfig {
                 .permitAll()
             )
             .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/api/**", "/chat/**")
+                .ignoringRequestMatchers("/api/**", "/chat/**", "/ws/**")
             );
 
         return http.build();

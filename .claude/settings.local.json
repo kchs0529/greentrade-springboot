@@ -4,7 +4,10 @@
       "Bash(./gradlew compileJava --no-daemon)",
       "Bash(python3:*)",
       "Bash(./gradlew compileJava)",
-      "Bash(grep -v \"^--$\")"
+      "Bash(grep -v \"^--$\")",
+      "Bash(./gradlew compileJava --rerun-tasks)",
+      "Bash(./gradlew bootRun)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8080/)"
     ]
   }
 }

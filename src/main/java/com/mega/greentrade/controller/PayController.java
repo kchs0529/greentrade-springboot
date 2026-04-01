@@ -6,12 +6,15 @@ import com.mega.greentrade.service.ProductService;
 import com.mega.greentrade.security.CustomUserDetails;
 import com.mega.greentrade.dto.UserDTO;
 import com.mega.greentrade.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Pay", description = "결제 관련 API")
 @Controller
 @RequestMapping("/pay")
 @RequiredArgsConstructor
@@ -21,6 +24,7 @@ public class PayController {
     private final UserRepository userRepository;
     private final PayService payService;
 
+    @Operation(summary = "결제 페이지")
     @GetMapping
     public String payPage(@RequestParam int productno,
                           @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -33,6 +37,7 @@ public class PayController {
         return "pay/pay";
     }
 
+    @Operation(summary = "결제 성공 처리")
     @GetMapping("/success")
     public String paySuccess(@RequestParam String paymentKey,
                              @RequestParam String orderId,
@@ -44,6 +49,7 @@ public class PayController {
         return "redirect:/mypage/buylist";
     }
 
+    @Operation(summary = "결제 실패 처리")
     @GetMapping("/fail")
     public String payFail(@RequestParam(required = false) String message,
                           @RequestParam(required = false) String code,

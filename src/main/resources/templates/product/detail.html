@@ -74,8 +74,9 @@
                     <i class="bi" th:classappend="${heartStatus == 1 ? 'bi-heart-fill' : 'bi-heart'}"></i>
                     찜하기
                 </button>
-                <!-- 채팅 (로그인 필요) -->
+                <!-- 채팅 (로그인 필요, 본인 상품 제외) -->
                 <a sec:authorize="isAuthenticated()"
+                   th:if="${currentUserno != product.userno}"
                    th:href="@{/chat(productno=${product.productno})}" class="btn btn-success">
                     <i class="bi bi-chat-dots"></i> 채팅하기
                 </a>

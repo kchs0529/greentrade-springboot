@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:thymeleaf="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/header :: head('채팅 목록')}"></head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <h5 class="fw-bold mb-3">
+                <i class="bi bi-chat-dots-fill text-success"></i> 채팅 목록
+            </h5>
+
+            <!-- 채팅 없을 때 -->
+            <div th:if="${#lists.isEmpty(chatrooms)}" class="text-center text-muted py-5">
+                <i class="bi bi-chat-square-dots fs-1 d-block mb-2"></i>
+                진행 중인 채팅이 없습니다.
+            </div>
+
+            <!-- 채팅방 목록 -->
+            <div th:each="room : ${chatrooms}" class="mb-2">
+                <a th:href="@{/chat/room/{id}(id=${room.chatroomId})}" class="text-decoration-none text-dark">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body d-flex align-items-center gap-3 py-3">
+
+                            <!-- 상품 이미지 -->
+                            <img th:if="${room.productImage != null and !#strings.isEmpty(room.productImage)}"
+                                 th:src="@{/uploads/{img}(img=${room.productImage})}"
+                                 class="rounded-2 flex-shrink-0"
+                                 style="width:56px;height:56px;object-fit:cover;" alt="상품 이미지">
+                            <div th:unless="${room.productImage != null and !#strings.isEmpty(room.productImage)}"
+                                 class="bg-light rounded-2 d-flex align-items-center justify-content-center flex-shrink-0"
+                                 style="width:56px;height:56px;">
+                                <i class="bi bi-image text-muted"></i>
+                            </div>
+
+                            <!-- 채팅 정보 -->
+                            <div class="flex-grow-1 overflow-hidden">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="fw-bold" th:text="${room.otherNickname}">닉네임</span>
+                                    <small class="text-muted ms-2 text-nowrap"
+                                           th:text="${room.lastMessageAt != null ? #temporals.format(room.lastMessageAt, 'MM/dd HH:mm') : ''}"></small>
+                                </div>
+                                <div class="small text-muted text-truncate mb-1"
+                                     th:text="${room.productTitle}">상품명</div>
+                                <div class="small text-truncate"
+                                     th:classappend="${room.lastMessage == null ? 'text-muted fst-italic' : 'text-dark'}"
+                                     th:text="${room.lastMessage != null ? room.lastMessage : '아직 메시지가 없습니다.'}"></div>
+                            </div>
+
+                            <!-- 역할 배지 -->
+                            <span class="badge rounded-pill flex-shrink-0"
+                                  th:classappend="${room.role == '구매자' ? 'bg-primary' : 'bg-success'}"
+                                  th:text="${room.role}"></span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

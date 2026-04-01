@@ -18,6 +18,9 @@ public class ChatRoom {
     @Column(name = "buyer")
     private int buyer;
 
+    @Column(name = "seller")
+    private int seller;
+
     @Column(name = "sellproduct")
     private int sellproduct;
 }

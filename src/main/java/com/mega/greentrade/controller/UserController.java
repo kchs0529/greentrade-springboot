@@ -4,18 +4,22 @@ import com.mega.greentrade.dto.UserDTO;
 import com.mega.greentrade.security.CustomUserDetails;
 import com.mega.greentrade.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "User", description = "회원 관련 API")
 @Controller
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
+    @Operation(summary = "로그인 페이지")
     @GetMapping("/login")
     public String loginPage(@RequestParam(required = false) String error, Model model) {
         if (error != null) {
@@ -24,11 +28,13 @@ public class UserController {
         return "login/login";
     }
 
+    @Operation(summary = "회원가입 페이지")
     @GetMapping("/join")
     public String joinPage() {
         return "login/join";
     }
 
+    @Operation(summary = "회원가입 처리")
     @PostMapping("/join")
     public String join(@ModelAttribute JoinDTO joinDTO, Model model) {
         if (userService.isDuplicateId(joinDTO.getUser_id())) {
@@ -39,17 +45,20 @@ public class UserController {
         return "redirect:/login";
     }
 
+    @Operation(summary = "아이디 중복 확인")
     @GetMapping("/join/check-id")
     @ResponseBody
     public String checkDuplicateId(@RequestParam String userId) {
         return userService.isDuplicateId(userId) ? "duplicate" : "available";
     }
 
+    @Operation(summary = "아이디 찾기 페이지")
     @GetMapping("/find-id")
     public String findIdPage() {
         return "login/find_id";
     }
 
+    @Operation(summary = "아이디 찾기 처리")
     @PostMapping("/find-id")
     public String findId(@RequestParam String email,
                          @RequestParam String user_call,
@@ -63,11 +72,13 @@ public class UserController {
         return "login/find_id";
     }
 
+    @Operation(summary = "비밀번호 찾기 페이지")
     @GetMapping("/find-password")
     public String findPasswordPage() {
         return "login/find_password";
     }
 
+    @Operation(summary = "임시 비밀번호 이메일 발송")
     @PostMapping("/find-password")
     public String findPassword(@RequestParam String user_id, Model model) {
         boolean sent = userService.sendTempPassword(user_id);
@@ -79,11 +90,13 @@ public class UserController {
         return "login/find_password";
     }
 
+    @Operation(summary = "비밀번호 변경 페이지")
     @GetMapping("/password-update")
     public String updatePasswordPage(@AuthenticationPrincipal CustomUserDetails userDetails) {
         return "login/update_password";
     }
 
+    @Operation(summary = "비밀번호 변경 처리")
     @PostMapping("/password-update")
     public String updatePassword(@AuthenticationPrincipal CustomUserDetails userDetails,
                                  @RequestParam String newPassword) {
